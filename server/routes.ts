@@ -7,8 +7,8 @@ import type { QuizQuestion, GameState, PlayerState } from "@shared/schema";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  baseURL: "https://api.deepseek.com",
-  apiKey: process.env.DEEPSEEK_API_KEY || "",
+  baseURL: process.env.OLLAMA_BASE_URL ? `${process.env.OLLAMA_BASE_URL}/v1` : "http://localhost:11434/v1",
+  apiKey: "ollama", // Ollama не требует реального ключа
 });
 
 // Room state in memory
@@ -56,7 +56,7 @@ async function generateQuestions(topic: string, count: number): Promise<QuizQues
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "deepseek-chat",
+      model: "mistral:7b",
       max_tokens: 4096,
       messages: [{ role: "user", content: prompt }],
     });
